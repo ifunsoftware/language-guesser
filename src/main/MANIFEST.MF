@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-Version: 1.0.1
+Bundle-Name: Language Guesser
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.aphreet.c3.language.guesser
+Export-Package: org.apache.lucene.misc
