@@ -37,12 +37,44 @@
                 <configuration>
                     <classesDirectory>${project.build.outputDirectory}</classesDirectory>
                     <archive>
-                        <manifestFile>src/main/MANIFEST.MF</manifestFile>
+                        <manifestFile>${bundleManifestPath}</manifestFile>
+                        <addMavenDescriptor>false</addMavenDescriptor>
                     </archive>
                 </configuration>
             </plugin>
 
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>manifest</id>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <tasks>
+                                        <echo message="Updating manifest file with current build number"/>
+                                        <copy file="src/META-INF/MANIFEST.MF" toDir="target"
+                                              overwrite="true"/>
+                                        <replace file="target/MANIFEST.MF" token="Bundle-Version: 1.0.0"
+                                                 value="Bundle-Version: ${bundleVersion}"/>
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
