@@ -227,6 +227,8 @@ class Trigrams implements TrigramListener {
 								new GZIPInputStream(is)));
 
 			int size = dis.readInt();
+            int averageFrequency = dis.readInt();
+		    int medianFrequency = dis.readInt();
 
 			Trigrams trigrams = new Trigrams(size);
 

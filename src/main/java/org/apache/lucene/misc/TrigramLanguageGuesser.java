@@ -94,7 +94,7 @@ public class TrigramLanguageGuesser implements LanguageGuesser {
 			String[] files = f.list();
 			for (int i = 0; i < files.length; i++) {
 				if (files[i].endsWith("tri")) {
-					addFile(f.getAbsolutePath() + "\\" + files[i]);
+					addFile(f.getAbsolutePath() + File.separator + files[i]);
 				}
 			}
 		}
