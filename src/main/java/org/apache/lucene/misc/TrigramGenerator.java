@@ -53,16 +53,11 @@ package org.apache.lucene.misc;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
- 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+
+import java.io.*;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * A class to help generating trigrams
@@ -75,11 +70,10 @@ class TrigramGenerator {
 	//BUFFERSIZE must be at least 2
 	private static final int BUFFERSIZE = 1024;
 	//A set to hold the trigram listeners
-	private Set tlset = new TreeSet();
+	private Set<TrigramListener> tlset = new HashSet<TrigramListener>();
 	private Reader reader;
 
 	public TrigramGenerator() {
-		;
 	}
 
 	public TrigramGenerator(Reader r) {
@@ -143,7 +137,7 @@ class TrigramGenerator {
 
 			for (int i = 2; i < nbread; i++) {
 				String s = new String(buf, i - 2, 3);
-				totalGrams = addTrigram(new String(s), totalGrams, maxGrams);
+				totalGrams = addTrigram(s, totalGrams, maxGrams);
 				if (totalGrams == -1)
 					break;
 			}
@@ -190,12 +184,12 @@ class TrigramGenerator {
 		File f = new File(fileLocation);
 		if (f.isDirectory()) {
 			String[] files = f.list();
-			for (int i = 0; i < files.length; i++) {
-				File fd = new File(f.getAbsolutePath() + "\\" + files[i]);
-				if (fd.isDirectory()) {
-					processLanguageDir(fileLocation, fd);
-				}
-			}
+            for (String file : files) {
+                File fd = new File(f.getAbsolutePath() + "\\" + file);
+                if (fd.isDirectory()) {
+                    processLanguageDir(fileLocation, fd);
+                }
+            }
 		}
 	}
 
@@ -210,15 +204,15 @@ class TrigramGenerator {
 		tg.addTrigramListener(ts);
 
 		String[] files = f.list();
-		for (int i = 0; i < files.length; i++) {
-			Reader r =
-				new BufferedReader(
-						new InputStreamReader(
-								new FileInputStream(f.getAbsolutePath() + "\\" + files[i]), 
-								"UTF-16BE"));
-			tg.setReader(r);
-			tg.start();
-		}
+        for (String file : files) {
+            Reader r =
+                    new BufferedReader(
+                            new InputStreamReader(
+                                    new FileInputStream(f.getAbsolutePath() + "\\" + file),
+                                    "UTF-16BE"));
+            tg.setReader(r);
+            tg.start();
+        }
 		ts.saveToFile(fileLocation + "\\" + f.getName() + ".tri");
 	}
 	
